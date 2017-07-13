@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleShoppingList", "SimpleShoppingList\SimpleShoppingList.csproj", "{21FC86F5-BAC8-4788-9BC1-5ABD262C0FB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleShoppingList.Tests", "SimpleShoppingList.Tests\SimpleShoppingList.Tests.csproj", "{31468E24-CCD4-48F4-A665-E7E755FD2999}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{21FC86F5-BAC8-4788-9BC1-5ABD262C0FB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{21FC86F5-BAC8-4788-9BC1-5ABD262C0FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{21FC86F5-BAC8-4788-9BC1-5ABD262C0FB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{21FC86F5-BAC8-4788-9BC1-5ABD262C0FB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{31468E24-CCD4-48F4-A665-E7E755FD2999}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31468E24-CCD4-48F4-A665-E7E755FD2999}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31468E24-CCD4-48F4-A665-E7E755FD2999}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31468E24-CCD4-48F4-A665-E7E755FD2999}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
