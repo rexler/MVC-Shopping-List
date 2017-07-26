@@ -17,5 +17,6 @@ namespace SimpleShoppingList.Models
         public virtual Category Category { get; set; }
         [Display(Name = "Meal Items")]
         public virtual List<Meal> Meals { get; set; }
+        public virtual List<ShoppingList> ShoppingLists { get; set; }
     }
 }

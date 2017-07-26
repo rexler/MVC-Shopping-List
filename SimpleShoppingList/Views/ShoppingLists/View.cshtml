@@ -1,0 +1,37 @@
+﻿@using SimpleShoppingList.Models;
+@using SimpleShoppingList.Controllers;
+@model SimpleShoppingList.Models.ShoppingList
+
+@{
+    ViewBag.Title = "View";
+}
+
+<h2>Shopping List</h2>
+
+<div>
+    <h3>@Html.DisplayFor(model => model.Name)</h3>
+    <hr />
+
+    <h4>Items:</h4>
+    <ul class="list-group">
+        @foreach (ItemDisplay item in ViewBag.MealItems)
+            {
+            <li class="list-group-item">@item.Name - @item.Quantity</li>
+        }
+    </ul>
+
+    <hr />
+
+    <h4>Meals:</h4>
+    <ul class="list-group">
+        @foreach (Meal m in Model.Meals)
+            {
+            <li class="list-group-item">@m.Name</li>
+        }
+    </ul>
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShoppingListId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

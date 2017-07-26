@@ -21,17 +21,31 @@ namespace SimpleShoppingList.Models
 
             Category meat = context.Categories.Add(new Category { Name = "Meat" });
             Item mince = context.Items.Add(new Item { Name = "Beef Mince", Category = meat, ItemOrder = 1 });
+            Item chicken = context.Items.Add(new Item { Name = "Chicken", Category = meat, ItemOrder = 2 });
 
-            context.Meals.Add(new Meal
+            Meal spagBol = context.Meals.Add(new Meal
             {
                 Name = "Spaghetti Bolognese",
                 Items = new List<Item>() { onion, mushrooms, tomato, mince }
             });
 
-            context.Meals.Add(new Meal
+            Meal chilli = context.Meals.Add(new Meal
             {
                 Name = "Chilli",
                 Items = new List<Item>() { onion, tomato, mince, kidneyBeans }
+            });
+
+            Meal chickMushroom = context.Meals.Add(new Meal
+            {
+                Name = "Chicken and Mushroom",
+                Items = new List<Item>() { onion, chicken }
+            });
+
+            context.ShoppingLists.Add(new ShoppingList
+            {
+                Name = "Week 1",
+                Items = new List<Item>() { onion, tomato, mince, kidneyBeans, onion, mushrooms, tomato, mince },
+                Meals = new List<Meal>() { spagBol, chilli, chickMushroom }
             });
 
             base.Seed(context);

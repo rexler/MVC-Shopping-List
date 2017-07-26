@@ -10,6 +10,13 @@ using SimpleShoppingList.Models;
 
 namespace SimpleShoppingList.Controllers
 {
+    public class ItemDisplay
+    {
+        public Item Item { get; set; }
+        public string Name { get; set; }
+        public int Quantity { get; set; }
+
+    }
     public class ShoppingListsController : Controller
     {
         private ShoppingListContext db = new ShoppingListContext();
@@ -32,6 +39,74 @@ namespace SimpleShoppingList.Controllers
             {
                 return HttpNotFound();
             }
+
+            return View(shoppingList);
+        }
+
+        // GET: ShoppingLists/View/5
+        public ActionResult View(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            if (shoppingList == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<Item> allItems = new List<Item>();
+
+            //Now you will see a contrived way of listing out meal items with their quantities
+            //alongside them in the view. 
+
+            List<ItemDisplay> mealItems = new List<ItemDisplay>();
+
+            foreach (Meal m in shoppingList.Meals)
+            {
+                foreach (Item i in m.Items)
+                {
+                    allItems.Add(i);
+
+                    
+                    //Check if item already exists
+                    List<ItemDisplay> matchedItems = mealItems.Where(p => p.Item == i).ToList();
+                    if (matchedItems.Count > 0)
+                    {
+                        //If item already exists, increment its quantity
+                        //Then remove and re-add it
+                        int quantity = matchedItems[0].Quantity + 1;
+                        mealItems.Remove(matchedItems[0]);
+                        mealItems.Add(new ItemDisplay { Item = i, Name = i.Name, Quantity = quantity });
+                    }
+                    else
+                    {
+                        mealItems.Add(new ItemDisplay { Item = i, Name = i.Name, Quantity = 1 });
+                    }
+                    
+                }
+            }
+
+            
+            allItems = allItems.OrderBy(i => i.ItemOrder).ToList();
+            allItems = allItems.Distinct().ToList();
+
+            //Now loop through the ordered item list and create a new one, 
+            //setting the correct quantity
+            List<ItemDisplay> newItemList = new List<ItemDisplay>();
+            foreach (Item newItem in allItems)
+            {
+                ItemDisplay matchedItem = mealItems.Where(p => p.Item == newItem).ToList()[0];
+                newItemList.Add(matchedItem);
+            }
+            
+
+            //LINQ version:
+            //var newItemList = allItems.OrderBy(x => x.ItemOrder).GroupBy(x => x, (y, z) => new ItemDisplay { Name = y.Name, Quantity = z.Count() }).ToList();
+
+            ViewBag.MealItems = newItemList; //allItems; // mealItems;
+
             return View(shoppingList);
         }
 
