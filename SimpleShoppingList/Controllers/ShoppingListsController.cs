@@ -15,8 +15,16 @@ namespace SimpleShoppingList.Controllers
         public Item Item { get; set; }
         public string Name { get; set; }
         public int Quantity { get; set; }
+        public Category Category { get; set; }
 
     }
+
+    public class CategoryDisplay
+    {
+        public Category Category { get; set; }
+        public List<ItemDisplay> Items { get; set; }
+    }
+
     public class ShoppingListsController : Controller
     {
         private ShoppingListContext db = new ShoppingListContext();
@@ -56,10 +64,17 @@ namespace SimpleShoppingList.Controllers
                 return HttpNotFound();
             }
 
-            var newItemList = shoppingList.Meals.SelectMany(m => m.Items) //First get the Items within the Meals
-                .OrderBy(x => x.ItemOrder) //Order by ItemOrder
+            List<Item> allItems = new List<Item>();
+
+            //Make a list of all Items comprised of items added to list and items belonging to meals
+            allItems = shoppingList.Meals.SelectMany(m => m.Items).Concat(shoppingList.Items).ToList();
+
+            List<ItemDisplay> newItemList = 
+                allItems.OrderBy(x => x.Category.DisplayOrder).ThenBy(x => x.ItemOrder) //Order by Category Order then Item Order
                 .GroupBy(x => x, (y, z) => 
-                    new ItemDisplay { Name = y.Name, Quantity = z.Count() }).ToList(); //Group them while creating new list items with the quantity
+                    new ItemDisplay { Name = y.Name, Quantity = z.Count(), Category = y.Category }).ToList(); //Group them while creating new list items with the quantity
+
+            //List<CategoryDisplay> allCats = newItemList.GroupBy(c => c).Select(x => new CategoryDisplay { Category = x. } ).ToList();
 
             ViewBag.MealItems = newItemList; 
 

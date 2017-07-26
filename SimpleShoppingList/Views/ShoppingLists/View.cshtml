@@ -16,7 +16,7 @@
     <ul class="list-group">
         @foreach (ItemDisplay item in ViewBag.MealItems)
             {
-            <li class="list-group-item">@item.Name - @item.Quantity</li>
+            <li class="list-group-item">@item.Category.Name: @item.Name - @item.Quantity</li>
         }
     </ul>
 

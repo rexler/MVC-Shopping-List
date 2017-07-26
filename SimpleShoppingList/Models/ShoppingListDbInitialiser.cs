@@ -9,8 +9,8 @@ namespace SimpleShoppingList.Models
     {
         protected override void Seed(ShoppingListContext context)
         {
-            Category fruitVeg = context.Categories.Add(new Category { Name = "Fruit and Veg" });
-            context.Items.Add(new Item { Name = "Strawberries", Category = fruitVeg, ItemOrder = 1 });
+            Category fruitVeg = context.Categories.Add(new Category { Name = "Fruit and Veg", DisplayOrder = 1 });
+            Item strawBerries = context.Items.Add(new Item { Name = "Strawberries", Category = fruitVeg, ItemOrder = 1 });
             context.Items.Add(new Item { Name = "Apples", Category = fruitVeg, ItemOrder = 2 });
             context.Items.Add(new Item { Name = "Blueberries", Category = fruitVeg, ItemOrder = 3 });
             Item onion = context.Items.Add(new Item { Name = "Onion", Category = fruitVeg, ItemOrder = 5 });
@@ -19,7 +19,7 @@ namespace SimpleShoppingList.Models
 
             Item kidneyBeans = context.Items.Add(new Item { Name = "Kidney Beans", Category = fruitVeg, ItemOrder = 5 });
 
-            Category meat = context.Categories.Add(new Category { Name = "Meat" });
+            Category meat = context.Categories.Add(new Category { Name = "Meat", DisplayOrder = 2 });
             Item mince = context.Items.Add(new Item { Name = "Beef Mince", Category = meat, ItemOrder = 1 });
             Item chicken = context.Items.Add(new Item { Name = "Chicken", Category = meat, ItemOrder = 2 });
 
@@ -44,7 +44,7 @@ namespace SimpleShoppingList.Models
             context.ShoppingLists.Add(new ShoppingList
             {
                 Name = "Week 1",
-                Items = new List<Item>() { onion, tomato, mince, kidneyBeans, onion, mushrooms, tomato, mince },
+                Items = new List<Item>() { onion, strawBerries },
                 Meals = new List<Meal>() { spagBol, chilli, chickMushroom }
             });
 
