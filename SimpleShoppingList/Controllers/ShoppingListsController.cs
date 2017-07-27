@@ -7,6 +7,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SimpleShoppingList.Models;
+using SimpleShoppingList.IDataAccess;
+using SimpleShoppingList.DataProvider;
+using SimpleShoppingList.DataAccess;
 
 namespace SimpleShoppingList.Controllers
 {
@@ -27,12 +30,28 @@ namespace SimpleShoppingList.Controllers
 
     public class ShoppingListsController : Controller
     {
-        private ShoppingListContext db = new ShoppingListContext();
+        private Models.ShoppingListContext db = new Models.ShoppingListContext();
+        private IShoppingListRepository shoppingListRepository;
+
+        public ShoppingListsController()
+        {
+            this.shoppingListRepository = new ShoppingListRepository(new DataProvider.ShoppingListContext());
+        }
+
+        public ShoppingListsController(IShoppingListRepository shoppingListRepository)
+        {
+            this.shoppingListRepository = shoppingListRepository;
+        }
 
         // GET: ShoppingLists
         public ActionResult Index()
         {
-            return View(db.ShoppingLists.ToList());
+            IEnumerable<DataProvider.Models.ShoppingList> shoppingLists = shoppingListRepository.GetShoppingLists();
+
+
+            //return View(db.ShoppingLists.ToList());
+
+            return View(ViewModelMapper.MapShoppingLists(shoppingLists));
         }
 
         // GET: ShoppingLists/Details/5
@@ -42,7 +61,9 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
+                shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
             {
                 return HttpNotFound();
@@ -92,12 +113,14 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ShoppingListId,Name")] ShoppingList shoppingList)
+        public ActionResult Create([Bind(Include = "ShoppingListId,Name")] ShoppingListViewModel shoppingList)
         {
             if (ModelState.IsValid)
             {
-                db.ShoppingLists.Add(shoppingList);
-                db.SaveChanges();
+                shoppingListRepository.AddShoppingList(ViewModelMapper.MapAddUpdateShoppingList(shoppingList));
+                shoppingListRepository.Save();
+                //db.ShoppingLists.Add(shoppingList);
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -124,12 +147,14 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ShoppingListId,Name")] ShoppingList shoppingList)
+        public ActionResult Edit([Bind(Include = "ShoppingListId,Name")] ShoppingListViewModel shoppingList)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(shoppingList).State = EntityState.Modified;
-                db.SaveChanges();
+                shoppingListRepository.UpdateShoppingList(ViewModelMapper.MapAddUpdateShoppingList(shoppingList));
+                shoppingListRepository.Save();
+                //db.Entry(shoppingList).State = EntityState.Modified;
+                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(shoppingList);
