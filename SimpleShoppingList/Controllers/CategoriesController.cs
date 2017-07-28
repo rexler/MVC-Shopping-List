@@ -7,17 +7,31 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SimpleShoppingList.Models;
+using SimpleShoppingList.IDataAccess;
+using SimpleShoppingList.DataAccess;
 
 namespace SimpleShoppingList.Controllers
 {
     public class CategoriesController : Controller
     {
         private ShoppingListContext db = new ShoppingListContext();
+        private IShoppingListRepository shoppingListRepository;
+
+        public CategoriesController()
+        {
+            this.shoppingListRepository = new ShoppingListRepository(new DataProvider.ShoppingListContext());
+        }
+
+        public CategoriesController(IShoppingListRepository shoppingListRepository)
+        {
+            this.shoppingListRepository = shoppingListRepository;
+        }
 
         // GET: Categories
         public ActionResult Index()
         {
-            return View(db.Categories.ToList());
+            IEnumerable<DataProvider.Models.Category> cats = shoppingListRepository.GetCategories();
+            return View(ViewModelMapper.MapCategories(cats));
         }
 
         // GET: Categories/Details/5
@@ -27,7 +41,9 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            //Category category = db.Categories.Find(id);
+            CategoryViewModel category = ViewModelMapper.MapCategory(
+                shoppingListRepository.GetCategory(id));
             if (category == null)
             {
                 return HttpNotFound();
@@ -46,12 +62,14 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,Name,DisplayOrder")] Category category)
+        public ActionResult Create([Bind(Include = "CategoryId,Name,DisplayOrder")] CategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                db.Categories.Add(category);
-                db.SaveChanges();
+                //db.Categories.Add(category);
+                //db.SaveChanges();
+                shoppingListRepository.AddCategory(ViewModelMapper.MapAddUpdateCategory(category));
+                shoppingListRepository.Save();
                 return RedirectToAction("Index");
             }
 
@@ -65,7 +83,9 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            //Category category = db.Categories.Find(id);
+            CategoryViewModel category = ViewModelMapper.MapCategory(
+                shoppingListRepository.GetCategory(id));
             if (category == null)
             {
                 return HttpNotFound();
@@ -78,12 +98,14 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryId,Name,DisplayOrder")] Category category)
+        public ActionResult Edit([Bind(Include = "CategoryId,Name,DisplayOrder")] CategoryViewModel category)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(category).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(category).State = EntityState.Modified;
+                //db.SaveChanges();
+                shoppingListRepository.UpdateCategory(ViewModelMapper.MapAddUpdateCategory(category));
+                shoppingListRepository.Save();
                 return RedirectToAction("Index");
             }
             return View(category);

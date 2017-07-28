@@ -41,5 +41,66 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(shoppingList).State = System.Data.Entity.EntityState.Modified;
         }
+
+        public IEnumerable<Item> GetItems()
+        {
+            return context.Items.ToList();
+        }
+
+        public void AddItem(Item item)
+        {
+            context.Items.Add(item);
+        }
+
+        public Item GetItem(int? id)
+        {
+            return context.Items.Find(id);
+        }
+
+        public void UpdateItem(Item item)
+        {
+            context.Entry(item).State = System.Data.Entity.EntityState.Modified;
+        }
+
+        public IEnumerable<Category> GetCategories()
+        {
+            return context.Categories.ToList();
+        }
+
+        public void AddCategory(Category cat)
+        {
+            context.Categories.Add(cat);
+        }
+
+        public Category GetCategory(int? id)
+        {
+            return context.Categories.Find(id);
+        }
+
+        public void UpdateCategory(Category cat)
+        {
+            context.Entry(cat).State = System.Data.Entity.EntityState.Modified;
+        }
+
+        public IEnumerable<Meal> GetMeals()
+        {
+            return context.Meals.ToList();
+        }
+
+        public void AddMeal(Meal meal)
+        {
+            context.Meals.Add(meal);
+        }
+
+        public Meal GetMeal(int? id)
+        {
+            return context.Meals.Find(id);
+        }
+
+        public void UpdateMeal(Meal meal)
+        {
+            context.Entry(meal).State = System.Data.Entity.EntityState.Modified;
+        }
+
     }
 }

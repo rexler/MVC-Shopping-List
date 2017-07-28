@@ -14,7 +14,7 @@ namespace SimpleShoppingList.Models
         public virtual int ItemOrder { get; set; }
         [Display(Name = "Category")]
         public virtual int CategoryId { get; set; }
-        public virtual Category Category { get; set; }
+        public virtual CategoryViewModel Category { get; set; }
         [Display(Name = "Meal Items")]
         public virtual List<MealViewModel> Meals { get; set; }
         public virtual List<ShoppingListViewModel> ShoppingLists { get; set; }

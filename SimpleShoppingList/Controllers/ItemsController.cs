@@ -7,18 +7,33 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using SimpleShoppingList.Models;
+using SimpleShoppingList.IDataAccess;
+using SimpleShoppingList.DataAccess;
 
 namespace SimpleShoppingList.Controllers
 {
     public class ItemsController : Controller
     {
         private ShoppingListContext db = new ShoppingListContext();
+        private IShoppingListRepository shoppingListRepository;
+
+        public ItemsController()
+        {
+            this.shoppingListRepository = new ShoppingListRepository(new DataProvider.ShoppingListContext());
+        }
+
+        public ItemsController(IShoppingListRepository shoppingListRepository)
+        {
+            this.shoppingListRepository = shoppingListRepository;
+        }
 
         // GET: Items
         public ActionResult Index()
         {
-            var items = db.Items.Include(i => i.Category);
-            return View(items.ToList());
+            IEnumerable<DataProvider.Models.Item> items = shoppingListRepository.GetItems(); 
+
+            //var items = db.Items.Include(i => i.Category);
+            return View(ViewModelMapper.MapItems(items));
         }
 
         // GET: Items/Details/5
@@ -28,19 +43,21 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            //Item item = db.Items.Find(id);
+            ItemViewModel item = ViewModelMapper.MapItem(
+                shoppingListRepository.GetItem(id));
             if (item == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.MealId = new SelectList(db.Meals, "MealId", "Name");
+            
             return View(item);
         }
 
         // GET: Items/Create
         public ActionResult Create()
         {
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name");
+            ViewBag.CategoryId = new SelectList(shoppingListRepository.GetCategories(), "CategoryId", "Name");
             return View();
         }
 
@@ -49,16 +66,18 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ItemId,Name,ItemOrder,CategoryId")] Item item)
+        public ActionResult Create([Bind(Include = "ItemId,Name,ItemOrder,CategoryId")] ItemViewModel item)
         {
             if (ModelState.IsValid)
             {
-                db.Items.Add(item);
-                db.SaveChanges();
+                //db.Items.Add(item);
+                //db.SaveChanges();
+                shoppingListRepository.AddItem(ViewModelMapper.MapAddUpdateItem(item));
+                shoppingListRepository.Save();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", item.CategoryId);
+            ViewBag.CategoryId = new SelectList(shoppingListRepository.GetCategories(), "CategoryId", "Name", item.CategoryId);
             return View(item);
         }
 
@@ -69,12 +88,14 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            //Item item = db.Items.Find(id);
+            ItemViewModel item = ViewModelMapper.MapItem(
+                shoppingListRepository.GetItem(id));
             if (item == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", item.CategoryId);
+            ViewBag.CategoryId = new SelectList(shoppingListRepository.GetCategories(), "CategoryId", "Name", item.CategoryId);
             return View(item);
         }
 
@@ -83,15 +104,17 @@ namespace SimpleShoppingList.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ItemId,Name,ItemOrder,CategoryId")] Item item)
+        public ActionResult Edit([Bind(Include = "ItemId,Name,ItemOrder,CategoryId")] ItemViewModel item)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(item).State = EntityState.Modified;
-                db.SaveChanges();
+                //db.Entry(item).State = EntityState.Modified;
+                //db.SaveChanges();
+                shoppingListRepository.UpdateItem(ViewModelMapper.MapAddUpdateItem(item));
+                shoppingListRepository.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.Categories, "CategoryId", "Name", item.CategoryId);
+            ViewBag.CategoryId = new SelectList(shoppingListRepository.GetCategories(), "CategoryId", "Name", item.CategoryId);
             return View(item);
         }
 

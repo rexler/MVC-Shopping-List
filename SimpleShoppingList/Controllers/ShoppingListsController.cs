@@ -47,10 +47,7 @@ namespace SimpleShoppingList.Controllers
         public ActionResult Index()
         {
             IEnumerable<DataProvider.Models.ShoppingList> shoppingLists = shoppingListRepository.GetShoppingLists();
-
-
             //return View(db.ShoppingLists.ToList());
-
             return View(ViewModelMapper.MapShoppingLists(shoppingLists));
         }
 
@@ -134,7 +131,9 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
+                shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
             {
                 return HttpNotFound();

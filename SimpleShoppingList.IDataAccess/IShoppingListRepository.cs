@@ -13,6 +13,18 @@ namespace SimpleShoppingList.IDataAccess
         void AddShoppingList(ShoppingList shoppingList);
         ShoppingList GetShoppingList(int? id);
         void UpdateShoppingList(ShoppingList shoppingList);
+        IEnumerable<Category> GetCategories();
+        void AddCategory(Category cat);
+        Category GetCategory(int? id);
+        void UpdateCategory(Category cat);
+        IEnumerable<Item> GetItems();
+        void AddItem(Item item);
+        Item GetItem(int? id);
+        void UpdateItem(Item item);
+        IEnumerable<Meal> GetMeals();
+        void AddMeal(Meal meal);
+        Meal GetMeal(int? id);
+        void UpdateMeal(Meal meal);
         void Save();
     }
 }
