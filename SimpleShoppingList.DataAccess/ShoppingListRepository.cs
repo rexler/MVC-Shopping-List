@@ -35,11 +35,16 @@ namespace SimpleShoppingList.DataAccess
         public List<ItemDisplay> GetShoppingListSortedItems(int? id)
         {
             ShoppingList shoppingList = context.ShoppingLists.Find(id);
+            //Get a list of all items comprised of the list items and meal items
             List<Item> allItems = shoppingList.Meals.SelectMany(m => m.Items).Concat(shoppingList.Items).ToList();
             List<ItemDisplay> newItemList =
                 allItems.OrderBy(x => x.Category.DisplayOrder).ThenBy(x => x.ItemOrder) //Order by Category Order then Item Order
                 .GroupBy(x => x, (y, z) =>
-                    new ItemDisplay { Name = y.Name, Quantity = z.Count(), Category = y.Category }).ToList(); //Group them while creating new list items with the quantity
+                    new ItemDisplay {
+                        Name = y.Name,
+                        Quantity = z.Count(),
+                        Category = y.Category
+                    }).ToList(); //Group them while creating new list items with the quantity
             return newItemList;
         }
 
@@ -48,8 +53,9 @@ namespace SimpleShoppingList.DataAccess
             context.Entry(shoppingList).State = System.Data.Entity.EntityState.Modified;
         }
 
-        public void DeleteShoppingList(ShoppingList shoppingList)
+        public void DeleteShoppingList(int? id)
         {
+            ShoppingList shoppingList = context.ShoppingLists.Find(id);
             context.ShoppingLists.Remove(shoppingList);
         }
         #endregion
@@ -74,8 +80,9 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(item).State = System.Data.Entity.EntityState.Modified;
         }
-        public void DeleteItem(Item item)
+        public void DeleteItem(int? id)
         {
+            Item item = context.Items.Find(id);
             context.Items.Remove(item);
         }
         #endregion
@@ -100,8 +107,9 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(cat).State = System.Data.Entity.EntityState.Modified;
         }
-        public void DeleteCategory(Category cat)
+        public void DeleteCategory(int? id)
         {
+            Category cat = context.Categories.Find(id);
             context.Categories.Remove(cat);
         }
         #endregion
@@ -126,8 +134,9 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(meal).State = System.Data.Entity.EntityState.Modified;
         }
-        public void DeleteMeal(Meal meal)
+        public void DeleteMeal(int? id)
         {
+            Meal meal = context.Meals.Find(id);
             context.Meals.Remove(meal);
         }
         #endregion

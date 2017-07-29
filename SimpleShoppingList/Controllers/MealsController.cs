@@ -9,12 +9,12 @@ using System.Web.Mvc;
 using SimpleShoppingList.Models;
 using SimpleShoppingList.IDataAccess;
 using SimpleShoppingList.DataAccess;
+using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.Controllers
 {
     public class MealsController : Controller
     {
-        private ShoppingListContext db = new ShoppingListContext();
         public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: Meals
@@ -32,8 +32,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Meal meal = db.Meals.Find(id);
-
             MealViewModel meal = ViewModelMapper.MapMeal(
                 shoppingListRepository.GetMeal(id));
 
@@ -65,8 +63,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Meals.Add(meal);
-                //db.SaveChanges();
                 shoppingListRepository.AddMeal(ViewModelMapper.MapAddUpdateMeal(meal));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -82,7 +78,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Meal meal = db.Meals.Find(id);
             MealViewModel meal = ViewModelMapper.MapMeal(
                 shoppingListRepository.GetMeal(id));
             if (meal == null)
@@ -101,8 +96,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(meal).State = EntityState.Modified;
-                //db.SaveChanges();
                 shoppingListRepository.UpdateMeal(ViewModelMapper.MapAddUpdateMeal(meal));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -117,7 +110,7 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Meal meal = db.Meals.Find(id);
+            MealViewModel meal = ViewModelMapper.MapMeal(shoppingListRepository.GetMeal(id));
             if (meal == null)
             {
                 return HttpNotFound();
@@ -130,19 +123,10 @@ namespace SimpleShoppingList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Meal meal = db.Meals.Find(id);
-            db.Meals.Remove(meal);
-            db.SaveChanges();
+            shoppingListRepository.DeleteMeal(id);
+            shoppingListRepository.Save();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

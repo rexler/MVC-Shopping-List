@@ -9,12 +9,12 @@ using System.Web.Mvc;
 using SimpleShoppingList.Models;
 using SimpleShoppingList.IDataAccess;
 using SimpleShoppingList.DataAccess;
+using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.Controllers
 {
     public class ItemsController : Controller
     {
-        private ShoppingListContext db = new ShoppingListContext();
         public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: Items
@@ -22,7 +22,6 @@ namespace SimpleShoppingList.Controllers
         {
             IEnumerable<DataProvider.Models.Item> items = shoppingListRepository.GetItems(); 
 
-            //var items = db.Items.Include(i => i.Category);
             return View(ViewModelMapper.MapItems(items));
         }
 
@@ -33,7 +32,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Item item = db.Items.Find(id);
             ItemViewModel item = ViewModelMapper.MapItem(
                 shoppingListRepository.GetItem(id));
             if (item == null)
@@ -60,8 +58,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Items.Add(item);
-                //db.SaveChanges();
                 shoppingListRepository.AddItem(ViewModelMapper.MapAddUpdateItem(item));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -78,7 +74,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Item item = db.Items.Find(id);
             ItemViewModel item = ViewModelMapper.MapItem(
                 shoppingListRepository.GetItem(id));
             if (item == null)
@@ -98,8 +93,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(item).State = EntityState.Modified;
-                //db.SaveChanges();
                 shoppingListRepository.UpdateItem(ViewModelMapper.MapAddUpdateItem(item));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -115,7 +108,7 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Item item = db.Items.Find(id);
+            ItemViewModel item = ViewModelMapper.MapItem(shoppingListRepository.GetItem(id));
             if (item == null)
             {
                 return HttpNotFound();
@@ -128,19 +121,10 @@ namespace SimpleShoppingList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Item item = db.Items.Find(id);
-            db.Items.Remove(item);
-            db.SaveChanges();
+            shoppingListRepository.DeleteItem(id);
+            shoppingListRepository.Save();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

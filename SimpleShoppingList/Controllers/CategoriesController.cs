@@ -9,12 +9,12 @@ using System.Web.Mvc;
 using SimpleShoppingList.Models;
 using SimpleShoppingList.IDataAccess;
 using SimpleShoppingList.DataAccess;
+using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.Controllers
 {
     public class CategoriesController : Controller
     {
-        private ShoppingListContext db = new ShoppingListContext();
         public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: Categories
@@ -31,7 +31,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //Category category = db.Categories.Find(id);
             CategoryViewModel category = ViewModelMapper.MapCategory(
                 shoppingListRepository.GetCategory(id));
             if (category == null)
@@ -56,8 +55,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Categories.Add(category);
-                //db.SaveChanges();
                 shoppingListRepository.AddCategory(ViewModelMapper.MapAddUpdateCategory(category));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -92,8 +89,6 @@ namespace SimpleShoppingList.Controllers
         {
             if (ModelState.IsValid)
             {
-                //db.Entry(category).State = EntityState.Modified;
-                //db.SaveChanges();
                 shoppingListRepository.UpdateCategory(ViewModelMapper.MapAddUpdateCategory(category));
                 shoppingListRepository.Save();
                 return RedirectToAction("Index");
@@ -108,7 +103,7 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Category category = db.Categories.Find(id);
+            CategoryViewModel category = ViewModelMapper.MapCategory(shoppingListRepository.GetCategory(id));
             if (category == null)
             {
                 return HttpNotFound();
@@ -121,19 +116,10 @@ namespace SimpleShoppingList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Category category = db.Categories.Find(id);
-            db.Categories.Remove(category);
-            db.SaveChanges();
+            shoppingListRepository.DeleteCategory(id);
+            shoppingListRepository.Save();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

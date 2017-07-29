@@ -14,8 +14,6 @@ using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.Controllers
 {
-    
-
     public class CategoryDisplay
     {
         public DataProvider.Models.Category Category { get; set; }
@@ -24,7 +22,6 @@ namespace SimpleShoppingList.Controllers
 
     public class ShoppingListsController : Controller
     {
-        private Models.ShoppingListContext db = new Models.ShoppingListContext();
         public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: ShoppingLists
@@ -58,7 +55,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
             ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
                 shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
@@ -89,8 +85,6 @@ namespace SimpleShoppingList.Controllers
             {
                 shoppingListRepository.AddShoppingList(ViewModelMapper.MapAddUpdateShoppingList(shoppingList));
                 shoppingListRepository.Save();
-                //db.ShoppingLists.Add(shoppingList);
-                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -104,7 +98,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
             ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
                 shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
@@ -125,8 +118,6 @@ namespace SimpleShoppingList.Controllers
             {
                 shoppingListRepository.UpdateShoppingList(ViewModelMapper.MapAddUpdateShoppingList(shoppingList));
                 shoppingListRepository.Save();
-                //db.Entry(shoppingList).State = EntityState.Modified;
-                //db.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(shoppingList);
@@ -139,8 +130,8 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //SimpleShoppingList.Models.ShoppingList shoppingList = db.ShoppingLists.Find(id);
-            
+            ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
+                shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
             {
                 return HttpNotFound();
@@ -153,19 +144,10 @@ namespace SimpleShoppingList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            SimpleShoppingList.Models.ShoppingList shoppingList = db.ShoppingLists.Find(id);
-            db.ShoppingLists.Remove(shoppingList);
-            db.SaveChanges();
+            shoppingListRepository.DeleteShoppingList(id);
+            shoppingListRepository.Save();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

@@ -14,22 +14,22 @@ namespace SimpleShoppingList.IDataAccess
         void AddShoppingList(ShoppingList shoppingList);
         ShoppingList GetShoppingList(int? id);
         void UpdateShoppingList(ShoppingList shoppingList);
-        void DeleteShoppingList(ShoppingList shoppingList);
+        void DeleteShoppingList(int? id);
         IEnumerable<Category> GetCategories();
         void AddCategory(Category cat);
         Category GetCategory(int? id);
         void UpdateCategory(Category cat);
-        void DeleteCategory(Category cat);
+        void DeleteCategory(int? id);
         IEnumerable<Item> GetItems();
         void AddItem(Item item);
         Item GetItem(int? id);
         void UpdateItem(Item item);
-        void DeleteItem(Item item);
+        void DeleteItem(int? id);
         IEnumerable<Meal> GetMeals();
         void AddMeal(Meal meal);
         Meal GetMeal(int? id);
         void UpdateMeal(Meal meal);
-        void DeleteMeal(Meal meal);
+        void DeleteMeal(int? id);
         void Save();
     }
 }

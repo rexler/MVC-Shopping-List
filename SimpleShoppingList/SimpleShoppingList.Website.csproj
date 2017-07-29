@@ -187,16 +187,11 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
-    <Compile Include="Models\Category.cs" />
     <Compile Include="Models\CategoryViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
-    <Compile Include="Models\Item.cs" />
     <Compile Include="Models\ItemViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Meal.cs" />
     <Compile Include="Models\MealViewModel.cs" />
-    <Compile Include="Models\ShoppingList.cs" />
-    <Compile Include="Models\ShoppingListContext.cs" />
     <Compile Include="Models\ShoppingListDbInitialiser.cs" />
     <Compile Include="Models\ShoppingListViewModel.cs" />
     <Compile Include="Models\ViewModelMapper.cs" />
