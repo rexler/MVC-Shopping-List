@@ -11,18 +11,18 @@ namespace SimpleShoppingList.DataAccess
 {
     public class ShoppingListRepository : IShoppingListRepository
     {
-        public ShoppingListContext context { get; set; }
-
-        public IEnumerable<ShoppingList> GetShoppingLists()
-        {
-            return context.ShoppingLists.ToList();
-        }
+        public ShoppingListContext context { get; set; }        
 
         public void Save()
         {
             this.context.SaveChanges();
         }
 
+        #region Shopping Lists
+        public IEnumerable<ShoppingList> GetShoppingLists()
+        {
+            return context.ShoppingLists.ToList();
+        }
         public void AddShoppingList(ShoppingList shoppingList)
         {
             context.ShoppingLists.Add(shoppingList);
@@ -32,12 +32,29 @@ namespace SimpleShoppingList.DataAccess
         {
             return context.ShoppingLists.Find(id);
         }
+        public List<ItemDisplay> GetShoppingListSortedItems(int? id)
+        {
+            ShoppingList shoppingList = context.ShoppingLists.Find(id);
+            List<Item> allItems = shoppingList.Meals.SelectMany(m => m.Items).Concat(shoppingList.Items).ToList();
+            List<ItemDisplay> newItemList =
+                allItems.OrderBy(x => x.Category.DisplayOrder).ThenBy(x => x.ItemOrder) //Order by Category Order then Item Order
+                .GroupBy(x => x, (y, z) =>
+                    new ItemDisplay { Name = y.Name, Quantity = z.Count(), Category = y.Category }).ToList(); //Group them while creating new list items with the quantity
+            return newItemList;
+        }
 
         public void UpdateShoppingList(ShoppingList shoppingList)
         {
             context.Entry(shoppingList).State = System.Data.Entity.EntityState.Modified;
         }
 
+        public void DeleteShoppingList(ShoppingList shoppingList)
+        {
+            context.ShoppingLists.Remove(shoppingList);
+        }
+        #endregion
+
+        #region Items
         public IEnumerable<Item> GetItems()
         {
             return context.Items.ToList();
@@ -57,7 +74,13 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(item).State = System.Data.Entity.EntityState.Modified;
         }
+        public void DeleteItem(Item item)
+        {
+            context.Items.Remove(item);
+        }
+        #endregion
 
+        #region Categories
         public IEnumerable<Category> GetCategories()
         {
             return context.Categories.ToList();
@@ -77,7 +100,13 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(cat).State = System.Data.Entity.EntityState.Modified;
         }
+        public void DeleteCategory(Category cat)
+        {
+            context.Categories.Remove(cat);
+        }
+        #endregion
 
+        #region Meals
         public IEnumerable<Meal> GetMeals()
         {
             return context.Meals.ToList();
@@ -97,6 +126,12 @@ namespace SimpleShoppingList.DataAccess
         {
             context.Entry(meal).State = System.Data.Entity.EntityState.Modified;
         }
+        public void DeleteMeal(Meal meal)
+        {
+            context.Meals.Remove(meal);
+        }
+        #endregion
+
 
     }
 }

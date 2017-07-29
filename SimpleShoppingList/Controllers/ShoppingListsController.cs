@@ -10,21 +10,15 @@ using SimpleShoppingList.Models;
 using SimpleShoppingList.IDataAccess;
 using SimpleShoppingList.DataProvider;
 using SimpleShoppingList.DataAccess;
+using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.Controllers
 {
-    public class ItemDisplay
-    {
-        public Item Item { get; set; }
-        public string Name { get; set; }
-        public int Quantity { get; set; }
-        public Category Category { get; set; }
-
-    }
+    
 
     public class CategoryDisplay
     {
-        public Category Category { get; set; }
+        public DataProvider.Models.Category Category { get; set; }
         public List<ItemDisplay> Items { get; set; }
     }
 
@@ -37,7 +31,6 @@ namespace SimpleShoppingList.Controllers
         public ActionResult Index()
         {
             IEnumerable<DataProvider.Models.ShoppingList> shoppingLists = shoppingListRepository.GetShoppingLists();
-            //return View(db.ShoppingLists.ToList());
             return View(ViewModelMapper.MapShoppingLists(shoppingLists));
         }
 
@@ -48,7 +41,6 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
             ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
                 shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
@@ -66,24 +58,15 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            //ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
+                shoppingListRepository.GetShoppingList(id));
             if (shoppingList == null)
             {
                 return HttpNotFound();
             }
 
-            List<Item> allItems = new List<Item>();
-
-            //Make a list of all Items comprised of items added to list and items belonging to meals
-            allItems = shoppingList.Meals.SelectMany(m => m.Items).Concat(shoppingList.Items).ToList();
-
-            List<ItemDisplay> newItemList = 
-                allItems.OrderBy(x => x.Category.DisplayOrder).ThenBy(x => x.ItemOrder) //Order by Category Order then Item Order
-                .GroupBy(x => x, (y, z) => 
-                    new ItemDisplay { Name = y.Name, Quantity = z.Count(), Category = y.Category }).ToList(); //Group them while creating new list items with the quantity
-
-            //List<CategoryDisplay> allCats = newItemList.GroupBy(c => c).Select(x => new CategoryDisplay { Category = x. } ).ToList();
-
+            List<ItemDisplay> newItemList = shoppingListRepository.GetShoppingListSortedItems(id);
             ViewBag.MealItems = newItemList; 
 
             return View(shoppingList);
@@ -156,7 +139,8 @@ namespace SimpleShoppingList.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            //SimpleShoppingList.Models.ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            
             if (shoppingList == null)
             {
                 return HttpNotFound();
@@ -169,7 +153,7 @@ namespace SimpleShoppingList.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            ShoppingList shoppingList = db.ShoppingLists.Find(id);
+            SimpleShoppingList.Models.ShoppingList shoppingList = db.ShoppingLists.Find(id);
             db.ShoppingLists.Remove(shoppingList);
             db.SaveChanges();
             return RedirectToAction("Index");

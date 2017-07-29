@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\Item.cs" />
+    <Compile Include="Models\ItemDisplay.cs" />
     <Compile Include="Models\Meal.cs" />
     <Compile Include="Models\ShoppingList.cs" />
     <Compile Include="ShoppingListContext.cs" />

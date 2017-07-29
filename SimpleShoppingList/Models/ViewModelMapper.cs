@@ -26,12 +26,32 @@ namespace SimpleShoppingList.Models
         {
             return new ShoppingListViewModel()
             {
+                /* TODO: Need to map list of meal items so ShoppingList view will work */
                 ShoppingListId = shoppingList.ShoppingListId,
                 Name = shoppingList.Name,
                 Items = shoppingList.Items.Select(x => 
-                    new ItemViewModel() { ItemId = x.ItemId, Name = x.Name, CategoryId = x.CategoryId }).ToList(),
+                    new ItemViewModel() { ItemId = x.ItemId, Name = x.Name, CategoryId = x.CategoryId,
+                        Category = new CategoryViewModel()
+                        {
+                            CategoryId = x.CategoryId, Name = x.Category.Name, DisplayOrder = x.Category.DisplayOrder
+                        } }).ToList(),
                 Meals = shoppingList.Meals.Select(x =>
-                    new MealViewModel() { MealId = x.MealId, Name = x.Name }).ToList()
+                    new MealViewModel() {
+                        MealId = x.MealId,
+                        Name = x.Name,
+                        Items = x.Items.Select(i => 
+                            new ItemViewModel()
+                            {
+                                ItemId = i.ItemId,
+                                Name = i.Name,
+                                CategoryId = i.CategoryId,
+                                Category = new CategoryViewModel()
+                                {
+                                    CategoryId = i.CategoryId,
+                                    Name = i.Category.Name
+                                }
+                            }).ToList()
+                    }).ToList()
             };
         }
 
