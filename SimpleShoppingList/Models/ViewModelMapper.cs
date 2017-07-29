@@ -52,7 +52,8 @@ namespace SimpleShoppingList.Models
             {
                 ItemId = item.ItemId,
                 CategoryId = item.CategoryId,
-                Name = item.Name
+                Name = item.Name,
+                ItemOrder = item.ItemOrder
             };
         }
 

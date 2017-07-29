@@ -15,7 +15,7 @@ namespace SimpleShoppingList
         protected void Application_Start()
         {
             Database.SetInitializer(new ShoppingListDbInitialiser());
-
+            IocConfig.Configure();
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);

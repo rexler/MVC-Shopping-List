@@ -31,17 +31,7 @@ namespace SimpleShoppingList.Controllers
     public class ShoppingListsController : Controller
     {
         private Models.ShoppingListContext db = new Models.ShoppingListContext();
-        private IShoppingListRepository shoppingListRepository;
-
-        public ShoppingListsController()
-        {
-            this.shoppingListRepository = new ShoppingListRepository(new DataProvider.ShoppingListContext());
-        }
-
-        public ShoppingListsController(IShoppingListRepository shoppingListRepository)
-        {
-            this.shoppingListRepository = shoppingListRepository;
-        }
+        public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: ShoppingLists
         public ActionResult Index()

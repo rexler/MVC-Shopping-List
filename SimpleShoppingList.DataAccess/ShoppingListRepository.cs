@@ -11,12 +11,8 @@ namespace SimpleShoppingList.DataAccess
 {
     public class ShoppingListRepository : IShoppingListRepository
     {
-        private ShoppingListContext context;
+        public ShoppingListContext context { get; set; }
 
-        public ShoppingListRepository(ShoppingListContext context)
-        {
-            this.context = context;
-        }
         public IEnumerable<ShoppingList> GetShoppingLists()
         {
             return context.ShoppingLists.ToList();

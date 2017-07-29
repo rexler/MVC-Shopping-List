@@ -15,17 +15,7 @@ namespace SimpleShoppingList.Controllers
     public class MealsController : Controller
     {
         private ShoppingListContext db = new ShoppingListContext();
-        private IShoppingListRepository shoppingListRepository;
-
-        public MealsController()
-        {
-            this.shoppingListRepository = new ShoppingListRepository(new DataProvider.ShoppingListContext());
-        }
-
-        public MealsController(IShoppingListRepository shoppingListRepository)
-        {
-            this.shoppingListRepository = shoppingListRepository;
-        }
+        public IShoppingListRepository shoppingListRepository { get; set; }
 
         // GET: Meals
         public ActionResult Index()
