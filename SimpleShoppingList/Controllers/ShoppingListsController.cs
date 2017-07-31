@@ -16,7 +16,7 @@ namespace SimpleShoppingList.Controllers
 {
     public class CategoryDisplay
     {
-        public DataProvider.Models.Category Category { get; set; }
+        public Category Category { get; set; }
         public List<ItemDisplay> Items { get; set; }
     }
 
@@ -27,7 +27,7 @@ namespace SimpleShoppingList.Controllers
         // GET: ShoppingLists
         public ActionResult Index()
         {
-            IEnumerable<DataProvider.Models.ShoppingList> shoppingLists = shoppingListRepository.GetShoppingLists();
+            IEnumerable<ShoppingList> shoppingLists = shoppingListRepository.GetShoppingLists();
             return View(ViewModelMapper.MapShoppingLists(shoppingLists));
         }
 
@@ -66,6 +66,42 @@ namespace SimpleShoppingList.Controllers
             ViewBag.MealItems = newItemList; 
 
             return View(shoppingList);
+        }
+
+        // GET: ShoppingLists/Manage/5
+        public ActionResult Manage(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            ShoppingListViewModel shoppingList = ViewModelMapper.MapShoppingList(
+                shoppingListRepository.GetShoppingList(id));
+            if (shoppingList == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(shoppingList);
+        }
+
+        public ActionResult DeleteItemFromList(int shoppingListID, int itemID)
+        {
+            try
+            {
+                shoppingListRepository.DeleteItemFromShoppingList(shoppingListID, itemID);
+                shoppingListRepository.Save();
+                var obj = new { success = true, message = "Success", id = itemID };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                var obj = new { success = false, message = ex.Message, id = itemID };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+
+            
+            
         }
 
         // GET: ShoppingLists/Create

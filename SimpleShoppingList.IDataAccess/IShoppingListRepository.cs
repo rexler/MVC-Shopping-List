@@ -15,6 +15,7 @@ namespace SimpleShoppingList.IDataAccess
         ShoppingList GetShoppingList(int? id);
         void UpdateShoppingList(ShoppingList shoppingList);
         void DeleteShoppingList(int? id);
+        void DeleteItemFromShoppingList(int shoppingListID, int itemID);
         IEnumerable<Category> GetCategories();
         void AddCategory(Category cat);
         Category GetCategory(int? id);

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Data.Entity;
 using System.Text;
 using System.Threading.Tasks;
+using SimpleShoppingList.DataProvider.Models;
 
 namespace SimpleShoppingList.DataProvider
 {
@@ -12,13 +13,13 @@ namespace SimpleShoppingList.DataProvider
         public ShoppingListContext() : base("name=ShoppingListContext")
         {
         }
-        public System.Data.Entity.DbSet<SimpleShoppingList.DataProvider.Models.ShoppingList> ShoppingLists { get; set; }
+        public System.Data.Entity.DbSet<ShoppingList> ShoppingLists { get; set; }
 
-        public System.Data.Entity.DbSet<SimpleShoppingList.DataProvider.Models.Item> Items { get; set; }
+        public System.Data.Entity.DbSet<Item> Items { get; set; }
 
-        public System.Data.Entity.DbSet<SimpleShoppingList.DataProvider.Models.Category> Categories { get; set; }
+        public System.Data.Entity.DbSet<Category> Categories { get; set; }
 
-        public System.Data.Entity.DbSet<SimpleShoppingList.DataProvider.Models.Meal> Meals { get; set; }
+        public System.Data.Entity.DbSet<Meal> Meals { get; set; }
 
         
     }

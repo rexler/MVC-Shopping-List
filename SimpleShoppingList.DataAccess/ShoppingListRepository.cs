@@ -58,6 +58,12 @@ namespace SimpleShoppingList.DataAccess
             ShoppingList shoppingList = context.ShoppingLists.Find(id);
             context.ShoppingLists.Remove(shoppingList);
         }
+        public void DeleteItemFromShoppingList(int shoppingListID, int itemID)
+        {
+            ShoppingList list = context.ShoppingLists.Find(shoppingListID);
+            Item item = list.Items.Where(x => x.ItemId == itemID).First();
+            list.Items.Remove(item);
+        }
         #endregion
 
         #region Items
@@ -139,6 +145,7 @@ namespace SimpleShoppingList.DataAccess
             Meal meal = context.Meals.Find(id);
             context.Meals.Remove(meal);
         }
+
         #endregion
 
 

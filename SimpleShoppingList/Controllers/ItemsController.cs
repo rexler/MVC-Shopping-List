@@ -20,7 +20,7 @@ namespace SimpleShoppingList.Controllers
         // GET: Items
         public ActionResult Index()
         {
-            IEnumerable<DataProvider.Models.Item> items = shoppingListRepository.GetItems(); 
+            IEnumerable<Item> items = shoppingListRepository.GetItems(); 
 
             return View(ViewModelMapper.MapItems(items));
         }

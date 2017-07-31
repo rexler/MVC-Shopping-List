@@ -1,0 +1,49 @@
+﻿@using SimpleShoppingList.Models;
+@using SimpleShoppingList.DataProvider.Models;
+@model SimpleShoppingList.Models.ShoppingListViewModel
+
+@{
+    ViewBag.Title = "Manage";
+}
+
+<h2>Shopping List</h2>
+
+<div>
+    <h3>@Html.DisplayFor(model => model.Name)</h3>
+    <hr />
+
+    <h4>Items:</h4>
+    <ul class="list-group">
+        @foreach (ItemViewModel item in Model.Items)
+            {
+            <li class="list-group-item manage-list-item" data-item-id="@item.ItemId">
+                <div>@item.Category.Name: @item.Name</div>
+                @using (Ajax.BeginForm("DeleteItemFromList", new { shoppingListID = Model.ShoppingListId, itemID = item.ItemId }, new AjaxOptions
+                {
+                    HttpMethod = "GET",
+                    OnSuccess = "ListItemDeleted"
+                }))
+                {
+                    <button type="submit" class="btn btn-default" aria-label="Left Align">
+                        <span class="glyphicon glyphicon-remove-circle" aria-hidden="true" style="font-size: 1.4em;"></span>
+                    </button>
+                }
+            </li>
+        }
+    </ul>
+
+    <hr />
+
+    <h4>Meals:</h4>
+    <ul class="list-group">
+        @foreach (MealViewModel m in Model.Meals)
+            {
+            <li class="list-group-item">@m.Name</li>
+        }
+    </ul>
+
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.ShoppingListId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

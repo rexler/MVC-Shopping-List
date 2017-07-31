@@ -20,7 +20,7 @@ namespace SimpleShoppingList.Controllers
         // GET: Categories
         public ActionResult Index()
         {
-            IEnumerable<DataProvider.Models.Category> cats = shoppingListRepository.GetCategories();
+            IEnumerable<Category> cats = shoppingListRepository.GetCategories();
             return View(ViewModelMapper.MapCategories(cats));
         }
 

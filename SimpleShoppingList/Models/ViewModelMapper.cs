@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SimpleShoppingList.DataProvider.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -7,22 +8,22 @@ namespace SimpleShoppingList.Models
 {
     public static class ViewModelMapper
     {
-        public static List<ShoppingListViewModel> MapShoppingLists(IEnumerable<DataProvider.Models.ShoppingList> shoppingLists)
+        public static List<ShoppingListViewModel> MapShoppingLists(IEnumerable<ShoppingList> shoppingLists)
         {
             List<ShoppingListViewModel> modelView = 
                 shoppingLists.Select(x => new ShoppingListViewModel() { ShoppingListId = x.ShoppingListId, Name = x.Name }).ToList();
             return modelView;
         }
 
-        public static DataProvider.Models.ShoppingList MapAddUpdateShoppingList(ShoppingListViewModel shoppingList)
+        public static ShoppingList MapAddUpdateShoppingList(ShoppingListViewModel shoppingList)
         {
-            return new DataProvider.Models.ShoppingList()
+            return new ShoppingList()
             {
                 ShoppingListId = shoppingList.ShoppingListId,
                 Name = shoppingList.Name
             };
         }
-        public static ShoppingListViewModel MapShoppingList(DataProvider.Models.ShoppingList shoppingList)
+        public static ShoppingListViewModel MapShoppingList(ShoppingList shoppingList)
         {
             return new ShoppingListViewModel()
             {
@@ -55,7 +56,7 @@ namespace SimpleShoppingList.Models
             };
         }
 
-        public static List<ItemViewModel> MapItems(IEnumerable<DataProvider.Models.Item> items)
+        public static List<ItemViewModel> MapItems(IEnumerable<Item> items)
         {
             List<ItemViewModel> modelView =
                 items.Select(x => new ItemViewModel()
@@ -66,9 +67,9 @@ namespace SimpleShoppingList.Models
             return modelView;
         }
 
-        public static DataProvider.Models.Item MapAddUpdateItem(ItemViewModel item)
+        public static Item MapAddUpdateItem(ItemViewModel item)
         {
-            return new DataProvider.Models.Item()
+            return new Item()
             {
                 ItemId = item.ItemId,
                 CategoryId = item.CategoryId,
@@ -77,7 +78,7 @@ namespace SimpleShoppingList.Models
             };
         }
 
-        public static ItemViewModel MapItem(DataProvider.Models.Item item)
+        public static ItemViewModel MapItem(Item item)
         {
             return new ItemViewModel()
             {
@@ -93,7 +94,7 @@ namespace SimpleShoppingList.Models
             };
         }
 
-        public static List<CategoryViewModel> MapCategories(IEnumerable<DataProvider.Models.Category> categories)
+        public static List<CategoryViewModel> MapCategories(IEnumerable<Category> categories)
         {
             List<CategoryViewModel> modelView =
                 categories.Select(x => new CategoryViewModel()
@@ -105,9 +106,9 @@ namespace SimpleShoppingList.Models
             return modelView;
         }
 
-        public static DataProvider.Models.Category MapAddUpdateCategory(CategoryViewModel category)
+        public static Category MapAddUpdateCategory(CategoryViewModel category)
         {
-            return new DataProvider.Models.Category()
+            return new Category()
             {
                 CategoryId = category.CategoryId,
                 DisplayOrder = category.DisplayOrder,
@@ -115,7 +116,7 @@ namespace SimpleShoppingList.Models
             };
         }
 
-        public static CategoryViewModel MapCategory(DataProvider.Models.Category category)
+        public static CategoryViewModel MapCategory(Category category)
         {
             return new CategoryViewModel()
             {
@@ -125,7 +126,7 @@ namespace SimpleShoppingList.Models
             };
         }
 
-        public static List<MealViewModel> MapMeals(IEnumerable<DataProvider.Models.Meal> meals)
+        public static List<MealViewModel> MapMeals(IEnumerable<Meal> meals)
         {
             List<MealViewModel> modelView =
                 meals.Select(x => new MealViewModel()
@@ -136,16 +137,16 @@ namespace SimpleShoppingList.Models
             return modelView;
         }
 
-        public static DataProvider.Models.Meal MapAddUpdateMeal(MealViewModel meal)
+        public static Meal MapAddUpdateMeal(MealViewModel meal)
         {
-            return new DataProvider.Models.Meal()
+            return new Meal()
             {
                 MealId = meal.MealId,
                 Name = meal.Name
             };
         }
 
-        public static MealViewModel MapMeal(DataProvider.Models.Meal meal)
+        public static MealViewModel MapMeal(Meal meal)
         {
             return new MealViewModel()
             {
