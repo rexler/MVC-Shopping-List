@@ -24,6 +24,7 @@ namespace SimpleShoppingList.IDataAccess
         IEnumerable<Item> GetItems();
         void AddItem(Item item);
         Item GetItem(int? id);
+        IEnumerable<Item> GetItemsByName(string search);
         void UpdateItem(Item item);
         void DeleteItem(int? id);
         IEnumerable<Meal> GetMeals();

@@ -98,10 +98,26 @@ namespace SimpleShoppingList.Controllers
             {
                 var obj = new { success = false, message = ex.Message, id = itemID };
                 return Json(obj, JsonRequestBehavior.AllowGet);
-            }
+            }            
+        }
 
-            
-            
+        public ActionResult SearchAddItemToList(string q)
+        {
+            if (q != null && q != "")
+            {
+                List<Item> results = shoppingListRepository.GetItemsByName(q).ToList();
+                var obj = new
+                {
+                    success = true,
+                    items = results.Select(x => new { Id = x.ItemId, Name = x.Name })
+                };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var obj = new { success = false, message = "Enter a search term" };
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
         }
 
         // GET: ShoppingLists/Create

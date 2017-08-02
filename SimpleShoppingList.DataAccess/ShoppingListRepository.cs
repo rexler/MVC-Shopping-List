@@ -72,6 +72,12 @@ namespace SimpleShoppingList.DataAccess
             return context.Items.ToList();
         }
 
+        public IEnumerable<Item> GetItemsByName(string search)
+        {
+            List<Item> results = context.Items.Where(i => i.Name.Contains(search)).ToList();
+            return results;
+        }
+
         public void AddItem(Item item)
         {
             context.Items.Add(item);
